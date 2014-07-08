@@ -94,7 +94,7 @@ through trajectory optimization }
   \end{columns}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[shrink]
   \frametitle{Aircraft model}
   \begin{equation*}
     \begin{array}[c]{c}
@@ -324,7 +324,7 @@ We can see that there is tipping point around $T_g=2.5$
 
 \subsection{Experimental setup}
 
-\begin{frame}
+\begin{frame}[shrink]
   \frametitle{Pitching mechanism and experimental conditions}
   \begin{columns}
     \column{0.6\textwidth}
@@ -340,31 +340,82 @@ We can see that there is tipping point around $T_g=2.5$
       \item Free stream velocity: 3 m/s
       \item Airfoil: NACA0009
       \item Reynolds number ~50000
-      \item Angle of attack controlled by servomotors and measured with two potentiometers
+    \end{itemize}
+    Controller and data acquisition
+    \begin{itemize}
+      \item Angle of attack controlled by simulink\textsuperscript{\textregistered} and two servomotors 
+      \item Servos position measured by two linear potentiometers
+      \item Piezoelectric force balance (NANO17) to measure the forces on the airfoil
     \end{itemize}
   \end{columns}
 \end{frame}
 
 \subsection{The Goman and Khrabrov model}
 
-\subsection{Validation of the model}
 \begin{frame}
   \frametitle{The GK model concept}
+  The Goman and Khrabrov model\footnote{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109–1115,1994.} - a non-linear state space model
   \begin{equation*}
     \begin{array}[c]{c}
-  C_l= f(\alpha,x(\alpha)) \\
-  \tau_1 \frac{dx}{dt} +x = x_0(\alpha - \tau_2 \dot{\alpha}) 
+      C_l= f(\alpha,x(\alpha)) \\
+      C_d= g(\alpha,x(\alpha)) \\
+      \tau_1 \frac{dx}{dt} +x = x_0(\alpha - \tau_2 \dot{\alpha}) 
     \end{array}
   \end{equation*}
+
+  \begin{columns}[t]
+    \column{0.38\textwidth}
+    Lift and drag model
+    \column{0.38\textwidth}
+    Non-linear state map
+    \column{0.38\textwidth}
+    Time constants $\tau_1$ and $\tau_2$
+  \end{columns}
+
+  \begin{columns}
+    \column{0.4\textwidth}
+    \resizebox{\textwidth}{!}{%
+      $
+    \begin{array}[c]{c}
+      \\
+      C_l=2 \pi \alpha (0.6 x + 0.4) + C_{l0} \\
+      C_d= \frac{ \left( \left( 2 - x \right)C_l \right)^2 }{G_{\max}} + C_{d0}
+    \end{array}
+      $%
+    }
+    \column{0.4\textwidth}
+    \begin{figure}[h]
+      \begin{center}
+	\includegraphics[width=0.9\textwidth]{./Figures/x_0_vs_alpha.eps}
+      \end{center}
+    \end{figure}
+    \column{0.4\textwidth}
+  \end{columns}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Data processing}
-%maybe put a example of the results
-\end{frame}
+\subsection{Determination and validation of the model}
 
 \begin{frame}
-  \frametitle{Quasi-steady map}
+  \frametitle{Quasi-steady map and state variable}
+\begin{equation*}
+  C_l(\alpha,x)=2 \pi \cdot \alpha (0.6 x + 0.4) + C_{l0}
+\end{equation*}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{figure}[h]
+      \begin{center}
+	\includegraphics[width=1\textwidth]{./Figures/Cd_and_Cl_NACA0009.eps}
+      \end{center}
+      \caption{Lift and drag coefficient in the quasi-steady case}
+    \end{figure}
+    \column{0.5\textwidth}
+    \begin{figure}[ht]
+      \begin{center}
+	\includegraphics[width=1\textwidth]{./Figures/x_0_vs_alpha.eps}
+      \end{center}
+      \caption{Quasi-steady profile for the state variable $x$}
+    \end{figure}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
