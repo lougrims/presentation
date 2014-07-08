@@ -1,4 +1,12 @@
 \documentclass[compress]{beamer}
+\usepackage[T1]{fontenc}
+%\usepackage{newtxtext,newtxmath}
+\usepackage{lmodern}% http://ctan.org/pkg/lm
+\usepackage{pgfpages}
+\usepackage{graphicx}
+\usepackage{mathtools}          % used for equations
+
+
 \mode<presentation>{\usetheme{Darmstadt}}
 \usefonttheme{professionalfonts} % using non standard fonts for beamer
 \usecolortheme{beaver}
@@ -12,9 +20,6 @@
 
 \setlength{\unitlength}{\textwidth}  % measure in textwidths
 
-\usepackage{pgfpages}
-\usepackage{graphicx}
-\usepackage{mathtools}          % used for equations
 
 \title[Trajectory optimization]{Energy savings for UAV flight in unsteady gusting conditions \\
 through trajectory optimization }
@@ -94,12 +99,12 @@ through trajectory optimization }
   \end{columns}
 \end{frame}
 
-\begin{frame}[shrink]
-  \frametitle{Aircraft model}
+\begin{frame}%[shrink]
+  \frametitle{Aircraft model\footnote{\tiny Lissaman P. 43rd AIAA Aerospace Sciences Meeting and Exhibit, 241, 2005.}}
   \begin{equation*}
     \begin{array}[c]{c}
-      \ddot{x}= -L' \cdot sin(\gamma) + D' \cdot cos(\gamma) \\
-      \ddot{z}= L' \cdot cos(\gamma) - D' \cdot sin(\gamma) - m \cdot g \\
+      m \ddot{x} = -L' \cdot sin(\gamma) + D' \cdot cos(\gamma) \\
+      m \ddot{z} = L' \cdot cos(\gamma) - D' \cdot sin(\gamma) - m \cdot g
     \end{array}
   \end{equation*}
   \begin{columns}
@@ -107,7 +112,7 @@ through trajectory optimization }
     \begin{figure}[h]
       \centering
       \includegraphics[width=1\textwidth]{./Figures/glider.eps}
-      \caption{Coordinate system used for the optimization}
+      %\caption{Coordinate system used for the optimization}
     \end{figure}
     \column{.7\textwidth}
     Lissaman's non-dimensional variables
@@ -209,7 +214,7 @@ through trajectory optimization }
 
 \end{frame}
 
-\subsection{Implementation validation}
+\subsection{Implementation and validation}
 
 \begin{frame}
   \frametitle{Comparison with Lissaman's results}
@@ -320,7 +325,7 @@ We can see that there is tipping point around $T_g=2.5$
 \end{frame}
 
 
-\section[GK model]{The unsteady aerodynamic model}
+\section[GK model]{The unsteady pitching aerodynamic model}
 
 \subsection{Experimental setup}
 
@@ -363,24 +368,30 @@ We can see that there is tipping point around $T_g=2.5$
     \end{array}
   \end{equation*}
 
-  \begin{columns}[t]
+  \begin{columns}[t] 
     \column{0.38\textwidth}
-    Lift and drag model
+      \begin{itemize}
+      \item   \textbf{Lift and drag model}
+    \end{itemize}
     \column{0.38\textwidth}
-    Non-linear state map
+     \begin{itemize}
+      \item    \textbf{Non-linear state map}
+    \end{itemize}
     \column{0.38\textwidth}
-    Time constants $\tau_1$ and $\tau_2$
+    \begin{itemize}
+      \item \textbf{Time constants $\tau_1$ and $\tau_2$} 
+    \end{itemize}
   \end{columns}
 
   \begin{columns}
     \column{0.4\textwidth}
     \resizebox{\textwidth}{!}{%
       $
-    \begin{array}[c]{c}
-      \\
-      C_l=2 \pi \alpha (0.6 x + 0.4) + C_{l0} \\
-      C_d= \frac{ \left( \left( 2 - x \right)C_l \right)^2 }{G_{\max}} + C_{d0}
-    \end{array}
+      \begin{array}[c]{c}
+	\\
+	C_l=2 \pi \alpha (0.6 x + 0.4) + C_{l0} \\
+	C_d= \frac{ \left( \left( 2 - x \right)C_l \right)^2 }{G_{\max}} + C_{d0}
+      \end{array}
       $%
     }
     \column{0.4\textwidth}
@@ -390,6 +401,12 @@ We can see that there is tipping point around $T_g=2.5$
       \end{center}
     \end{figure}
     \column{0.4\textwidth}
+    \begin{figure}[h]
+      \begin{center}
+	\includegraphics[width=0.9\textwidth]{./Figures/Cl_u=3_meanaoa=12_amp=2_freq=0p5.eps}
+      \end{center}
+    \end{figure}
+
   \end{columns}
 \end{frame}
 
