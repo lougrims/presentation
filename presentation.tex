@@ -168,7 +168,7 @@ through trajectory optimization }
     \item Vertical wind gust:
       \begin{equation*}
 	\begin{array}[c]{c}
-	  W_g = W_a \cdot \sin(2\pi T) \\
+	  W_g = W_a \cdot \sin(2\pi \frac{T}{T_g}) \\
 	  U_g = 0 
 	\end{array}
       \end{equation*}
@@ -176,21 +176,21 @@ through trajectory optimization }
       \begin{equation*}
 	\begin{array}[c]{c}
 	  W_g =0 \\ 
-	  U_g = W_a \cdot \cos(2\pi T) 
+	  U_g = W_a \cdot \cos(2\pi \frac{T}{T_g}) 
 	\end{array}
       \end{equation*}
     \item Combined wind gust:
       \begin{equation*}
 	\begin{array}[c]{c}
-	  W_g = W_a \cdot \sin(2\pi T) \\ 
-	  U_g = W_a \cdot \cos(2 \pi T + \varphi)
+	  W_g = W_a \cdot \sin(2\pi \frac{T}{T_g}) \\ 
+	  U_g = W_a \cdot \cos(2 \pi \frac{T}{T_g} + \varphi)
 	\end{array}
       \end{equation*}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Optimization algorithm}
+  \frametitle{Optimization algorithm - a minimization problem}
   \begin{itemize}
     \item State vector
       \begin{equation*}
@@ -262,7 +262,10 @@ through trajectory optimization }
     \begin{itemize}
       \item Limits in range of $C_l$
 	\begin{equation*}
-	  L_{\min} \le L_i \le L_{\max}
+	  \begin{array}[c]{c}
+	  L_{\min} \le L_i \le L_{\max} \\
+	  \alpha_{\max} \le \alpha_i \le \alpha_{\max}
+	  \end{array}
 	\end{equation*}
     \end{itemize}
   \end{columns}
@@ -271,16 +274,15 @@ through trajectory optimization }
 \subsection{Implementation and validation}
 
 \begin{frame}
-  \frametitle{Comparison with Lissaman's results}
-
+  \frametitle{Comparison with Lissaman's results - Quadratic model}
+Lissaman found a gust amplitude $W_a=0.128$ for this case 
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}[ht]
       \begin{center}	
 	\includegraphics[width=1\textwidth]{./Figures/Windtype=1_Tg=4_Wg=0p129_quad_G=20.eps}
       \end{center}
-      \caption{Optimization results for a $4T$ long vertical gust}
-      \label{fig:Validation_optimization}
+      \caption{Optimization results for a $4T$ long vertical gust $W_a=0.129$}
     \end{figure}
     \column{0.5\textwidth}
     \begin{figure}[h]
@@ -293,7 +295,7 @@ through trajectory optimization }
 \end{frame}
 
 \begin{frame}
-  \frametitle{Quasi-steady lift to drag model}
+  \frametitle{Quasi-steady lift to drag model - NACA009}
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}
@@ -417,8 +419,8 @@ through trajectory optimization }
   The Goman and Khrabrov model\footnote{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109–1115,1994.} - a non-linear state space model
   \begin{equation*}
     \begin{array}[c]{c}
-      C_l= f(\alpha,x(\alpha)) \\
-      C_d= g(\alpha,x(\alpha)) \\
+      C_l= f(\alpha,x) \\
+      C_d= g(\alpha,x) \\
       \tau_1 \frac{dx}{dt} +x = x_0(\alpha - \tau_2 \dot{\alpha}) 
     \end{array}
   \end{equation*}
@@ -470,7 +472,10 @@ through trajectory optimization }
 \begin{frame}
   \frametitle{Quasi-steady map and state variable}
   \begin{equation*}
-    C_l(\alpha,x)=2 \pi \cdot \alpha (0.6 x + 0.4) + C_{l0}
+      \begin{array}[c]{c}
+	C_l=2 \pi \alpha (0.6 x + 0.4) + C_{l0} \\
+	C_d= \frac{ \left( \left( 2 - x \right)C_l \right)^2 }{G_{\max}} + C_{d0}
+      \end{array}
   \end{equation*}
   \begin{columns}
     \column{0.5\textwidth}
@@ -604,7 +609,7 @@ through trajectory optimization }
 
 
 \begin{frame}
-  \frametitle{A closer look at good performing short gusts}
+  \frametitle{A closer look at $T_g \in [0.2,0.5]$ ($k \in [0.05,0.175]$)}
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{./Figures/Cl_vs_alpha_wt=1_tg=0p5_alphamax=20.eps}
@@ -623,7 +628,7 @@ through trajectory optimization }
 
 
 \begin{frame}
-  \frametitle{Difference around $T_g \le0.2$}
+  \frametitle{Difference around $T_g \le0.2$ ($k \ge 0.175$)}
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{./Figures/LUT_vs_GK_Wg_vs_TG_windtype=3_alhpamax=12_nodalphalimit.eps}
@@ -661,19 +666,37 @@ through trajectory optimization }
 \end{frame}
 
 \section{Conclusion}
-  GK model prediction:
-    \begin{itemize}
-      \item Accurate prediction of lift and \emph{drag} for arbitrary pitch motion
-      \item The drag coefficient shares the same state variable as the lift 
-      \item The model is fast enough to be used for optimization algorithms
-    \end{itemize}
-  Trajectory optimization
-    \begin{itemize}
-      \item Neutral energy flight is possible through combinations of vertical and horizontal gusts
-      \item Vehicle and airfoil time scale are related through the Froude number
-      \item Unsteady aerodynamic effects are seen for gusts shorter than $0.7T$
-      \item The unsteady effects are beneficial for $T_g \in [0.2,0.7]$ as they let the airfoil achieve higher $C_l$ values
-      \item The unsteady effects are detrimental for $T_g$ smaller than $0.2$, where the ``angle of attack lag'' becomes significant
-    \end{itemize}
+\begin{frame}
+  \textbf{GK model prediction:}
+  \begin{itemize}
+    \item Accurate prediction of lift and \emph{drag} for arbitrary pitch motion
+    \item The drag coefficient shares the same state variable as the lift 
+    \item The model is fast enough to be used for optimization algorithms
+  \end{itemize}
+  \textbf{Trajectory optimization}
+  \begin{itemize}
+    \item Neutral energy flight is possible through combinations of vertical and horizontal gusts
+    \item Vehicle and airfoil time scale are related through the Froude number
+    \item Unsteady aerodynamic effects are seen for gusts shorter than $0.7T$
+    \item The unsteady effects are beneficial for $T_g \in [0.2,0.7]$ as they let the airfoil achieve higher $C_l$ values
+    \item The unsteady effects are detrimental for $T_g$ smaller than $0.2$, where the ``angle of attack lag'' becomes significant
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Possible improvements}
+  \textbf{GK model prediction:}
+  \begin{itemize}
+    \item Extending the GK model to a plunging and surging flow
+    \item Devise a more rigorous way to obtain the time constants
+    \item Implement a model for the moment coefficient
+    \item Link the state variable and the flow configuration
+  \end{itemize}
+  \textbf{Trajectory optimization}
+  \begin{itemize}
+    \item Further investigations should be performed for very short gusts
+    \item The effects of surging and plunging are not considered
+    \item Introduce a 3rd degree of freedom to account for the moment of inertia
+  \end{itemize}
+\end{frame}
 \end{document}
