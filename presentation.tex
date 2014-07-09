@@ -57,7 +57,7 @@ through trajectory optimization }
 \subsection{Dynamic soaring}
 
 \begin{frame}
-    \frametitle{Different types of soaring}
+  \frametitle{Different types of soaring}
   \begin{columns}
     \column{.5\textwidth}
     \begin{figure}[h]
@@ -94,13 +94,13 @@ through trajectory optimization }
 
     \column{.5\textwidth}
     \begin{block}{The neutral energy loop}
-     Finding the minimal wind gust that allows to maintain altitude and speed over a gust. 
+      Finding the minimal wind gust that allows to maintain altitude and speed over a gust. 
     \end{block}
   \end{columns}
 \end{frame}
 
 \begin{frame}%[shrink]
-  \frametitle{Aircraft model\footnote{\tiny Lissaman P. 43rd AIAA Aerospace Sciences Meeting and Exhibit, 241, 2005.}}
+  \frametitle{Aircraft model\footnote{\tiny Lissaman P and Patel C. Neutral energy cycles for a vehicle in sinusoidal and turbulent vertical gusts. 45th AIAA meeting,863, 2007}}
   \begin{equation*}
     \begin{array}[c]{c}
       m \ddot{x} = -L' \cdot sin(\gamma) + D' \cdot cos(\gamma) \\
@@ -119,8 +119,8 @@ through trajectory optimization }
     \begin{itemize}
       \item Velocities with $V^{*}$ the optimal glide speed
       \item Time with $T=\frac{V^{*}}{g}$
-      \item Lift and drag coefficients $L= \frac{C_l}{C_l^*}$ and $D= \frac{C_d}{C_d^*}$
-      \item Dynamic pressure $Q = \frac{L'}{MgL} = \frac{\frac{1}{2} \rho V^2 C_l C_l^* }{Mg}$
+      \item Lift and drag coefficients $L= \frac{C_l}{C_l^*}$ $D= \frac{C_d}{C_d^*}$
+      \item Dynamic pressure $Q = \frac{L'}{MgL} = \frac{ \rho V^{2} C_l^* }{2Mg}$ $Q=(U-U_g)^2+ (W-W_g)^2$
     \end{itemize}
   \end{columns}
   \begin{equation*}
@@ -134,6 +134,7 @@ through trajectory optimization }
 
 \begin{frame}
   \frametitle{Quasi-steady lift and drag model}
+
   \begin{columns}[t]
     \column{.5\textwidth}
     \begin{itemize}
@@ -146,17 +147,17 @@ through trajectory optimization }
   \end{columns}
   \begin{columns}
     \column{.6\textwidth}
-	\begin{figure}[h]
-	  \centering
-	  \includegraphics[width=1\textwidth]{./Figures/NACA0009_steady_map_Cl_Cd.eps}
-	  \caption{Simplified lift and drag for the NACA0009 airfoil}
-	\end{figure}
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=1\textwidth]{./Figures/NACA0009_steady_map_Cl_Cd.eps}
+      \caption{Simplified lift and drag for the NACA0009 airfoil}
+    \end{figure}
     \column{.4\textwidth}
-	\begin{equation*}
-    \begin{array}[c]{c}
-	  D=\frac{1+L^2}{2G^*}\\ \\ \\ \\ 
-	\end{array}
-	\end{equation*}
+    \begin{equation*}
+      \begin{array}[c]{c}
+	D=\frac{1+L^2}{2G^*}\\ \\ \\ \\ 
+      \end{array}
+    \end{equation*}
   \end{columns}
 \end{frame}
 
@@ -190,34 +191,88 @@ through trajectory optimization }
 
 \begin{frame}
   \frametitle{Optimization algorithm}
-  The cycle is discretized 
-  \begin{equation*}
-    x= 
-    \begin{bmatrix}
-      \cdots \\
-      X_i \\
-      Z_i \\
-      U_i \\
-      W_i \\
-      L_i / \alpha_i \\
-      \cdots \\
-      W_a
-    \end{bmatrix}
-    \quad i \in [1,N]
-  \end{equation*}
-
+  \begin{itemize}
+    \item State vector
+      \begin{equation*}
+	x= 
+	\begin{bmatrix}
+	  \cdots \\
+	  X_i \\
+	  Z_i \\
+	  U_i \\
+	  W_i \\
+	  L_i / \alpha_i \\
+	  \cdots \\
+	  W_a
+	\end{bmatrix}
+	\quad i \in [1,N]
+      \end{equation*}
+    \item Cost function: $W_a$
+    \item Constraints: equations of motion, limits on the range of angles of attack allowed, neutral energy loop conditions.
+  \end{itemize}
   %state vector and cost function
 \end{frame}
 
 \begin{frame}
   \frametitle{Constraints formulation}
+  \begin{itemize}
+    \item Equations of motion (with Simpson's discreet integral)
+      \begin{equation*}
+	\begin{array}[c]{cc}
+	  y_i= \begin{bmatrix}
+	    X_i \\
+	    Z_i \\
+	    U_i \\
+	    W_i 
+	  \end{bmatrix} &
 
+	  \dot{y_i} = 
+	  \begin{bmatrix}
+	    U_i \\
+	    W_i \\
+	    -L_i Q_i \cdot sin(\gamma_i) + D_i Q_i \cdot cos(\gamma_i) \\
+	    L_i Q_i  \cdot cos(\gamma_i ) - D_i Q_i  \cdot sin(\gamma_i ) - 1
+	  \end{bmatrix}
+	\end{array}
+      \end{equation*}
+
+      \begin{equation*}
+	0=y_{k+1} - y_k - \frac{1}{6}( \dot{y_k} + 4 \dot{y_m} + \dot{y_{k+1}})\delta t \quad \forall i \in [1,N-1]
+      \end{equation*}
+  \end{itemize}
+
+  \begin{columns}[t]
+    \column{0.5\textwidth}
+    \begin{itemize}
+      \item Neutral energy loop
+	\begin{equation*}
+	  \begin{array}[c]{cc}
+	    Z_1 = Z_N & L_1 = L_N \\
+	    W_1 = W_N & U_1 = U_N
+	  \end{array}
+	\end{equation*}
+	\begin{equation*}
+	  \begin{array}[c]{c}
+	    W_2 - W_1 = W_N - W_{N-1} \\
+	    U_2 - U_1 = U_N - U_{N-1} 
+	  \end{array}
+	\end{equation*}
+    \end{itemize}
+    \column{0.5\textwidth}
+    \begin{itemize}
+      \item Limits in range of $C_l$
+	\begin{equation*}
+	  L_{\min} \le L_i \le L_{\max}
+	\end{equation*}
+    \end{itemize}
+  \end{columns}
 \end{frame}
 
 \subsection{Implementation and validation}
 
 \begin{frame}
   \frametitle{Comparison with Lissaman's results}
+
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}[ht]
@@ -283,13 +338,13 @@ through trajectory optimization }
 
 \begin{frame}
   \frametitle{Difference between short and long gusts}
-We can see that there is tipping point around $T_g=2.5$
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.7\textwidth]{./Figures/alpha_vs_Tg_QS_short_vs_long_wt3.eps}
-  \caption{Difference between short and long gust angle of attack profile for combined gusts}
-  \label{fig:short_vs_long_qs_wt=3}
-\end{figure}
+  We can see that there is tipping point around $T_g=2.5$
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./Figures/alpha_vs_Tg_QS_short_vs_long_wt3.eps}
+    \caption{Difference between short and long gust angle of attack profile for combined gusts}
+    \label{fig:short_vs_long_qs_wt=3}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -315,13 +370,13 @@ We can see that there is tipping point around $T_g=2.5$
 
 \begin{frame}
   \frametitle{Phase influence}
-\begin{figure}[ht]
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{./Figures/combined_gust_amplitude_vs_phase_LUT.eps}
-  \end{center}
-  \caption{Influence of the phase between the components of the combined gust}
-  \label{fig:combined_amplitude_phase}
-\end{figure}
+  \begin{figure}[ht]
+    \begin{center}
+      \includegraphics[width=0.7\textwidth]{./Figures/combined_gust_amplitude_vs_phase_LUT.eps}
+    \end{center}
+    \caption{Influence of the phase between the components of the combined gust}
+    \label{fig:combined_amplitude_phase}
+  \end{figure}
 \end{frame}
 
 
@@ -370,11 +425,11 @@ We can see that there is tipping point around $T_g=2.5$
 
   \begin{columns}[t] 
     \column{0.38\textwidth}
-      \begin{itemize}
+    \begin{itemize}
       \item   \textbf{Lift and drag model}
     \end{itemize}
     \column{0.38\textwidth}
-     \begin{itemize}
+    \begin{itemize}
       \item    \textbf{Non-linear state map}
     \end{itemize}
     \column{0.38\textwidth}
@@ -414,9 +469,9 @@ We can see that there is tipping point around $T_g=2.5$
 
 \begin{frame}
   \frametitle{Quasi-steady map and state variable}
-\begin{equation*}
-  C_l(\alpha,x)=2 \pi \cdot \alpha (0.6 x + 0.4) + C_{l0}
-\end{equation*}
+  \begin{equation*}
+    C_l(\alpha,x)=2 \pi \cdot \alpha (0.6 x + 0.4) + C_{l0}
+  \end{equation*}
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}[h]
@@ -437,16 +492,59 @@ We can see that there is tipping point around $T_g=2.5$
 
 \begin{frame}
   \frametitle{Time constant determination}
+  Periodic sinusoidal pitching at different frequencies $k=\pi \frac{c f}{u}$
+
+  \begin{figure}[h]
+    \begin{center}
+      \includegraphics[width=0.65\textwidth]{./Figures/Cl_u=3_meanaoa=12_amp=2_freq=0p5.eps}
+    \end{center}
+    \caption{Comparison of experimental lift coefficient and model prediction after tunning of the time constant at $k=0.128$}
+
+    We find $\bold{\tau_1=3.1t^+}$ and $\bold{\tau_2=4.29t^+}$ (with $t^+=\frac{c}{u}$)
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Comparison with periodic measurements}
+  \frametitle{Comparison with periodic measurements - Lift }
+
+  \begin{figure}[h]
+    \begin{center}
+      \includegraphics[width=0.75\textwidth]{./Figures/Pitching_allcases_GK_CL_12_amp_2.eps}
+    \end{center}
+    \caption{Lift measurement and prediction during sinusoidal pitching around 12 degree} 
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Pseudo-random case}
+  \frametitle{Comparison with periodic measurements - Drag}
+
+  \begin{figure}[h]
+    \begin{center}
+      \includegraphics[width=0.75\textwidth]{./Figures/Pitching_allcases_GK_CD_12_amp_2.eps}
+    \end{center}
+    \caption{drag measurement and prediction during sinusoidal pitching around 12 degree} 
+  \end{figure}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Pseudo-random case - Lift}
+  \begin{figure}[h]
+    \begin{center}
+      \includegraphics[width=0.8\textwidth]{./Figures/Cl_u=3_meanaoa=12(15seconds)_amp=2_freq=2p0.eps}
+    \end{center}
+    \caption{Unsteady effects of random pitching on the lift}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pseudo-random case - Drag}
+  \begin{figure}[h]
+    \begin{center}
+      \includegraphics[width=0.8\textwidth]{./Figures/Cd_u=3_meanaoa=12(15seconds)_amp=2_freq=2p0.eps}
+    \end{center}
+    \caption{Unsteady effects of random pitching on the drag}
+  \end{figure}
+\end{frame}
 
 \section[Unsteady optimization]{Unsteady trajectory optimization}
 
@@ -454,29 +552,128 @@ We can see that there is tipping point around $T_g=2.5$
 
 \begin{frame}
   \frametitle{Froude number equivalence}
-\end{frame}
+  \begin{columns}
+    \column{0.4\textwidth}
+    Gliding vehicle time scale
+    \begin{equation*}
+      T=\frac{g}{V^*}
+    \end{equation*}
 
+    Airfoil time scale
+    \begin{equation*}
+      t^+=\frac{c}{u}
+    \end{equation*}
+
+    For a vehicle flying at $V^*$
+    \begin{equation*}
+      Fr=\frac{T}{t+}=\frac{{V^*}^2}{g \cdot c}
+      \label{eqn:T_t+_ratio}
+    \end{equation*}
+
+    \column{0.7\textwidth}
+    \begin{figure}[h]
+      \begin{center}
+	\includegraphics[width=0.8\textwidth]{./Figures/froude.png}
+      \end{center}
+      \caption{T to t+ ratio for various flying objects}
+    \end{figure}
+  \end{columns}
+\end{frame}
 \subsection{Gust duration dependency}
 
 \begin{frame}
-  \frametitle{Global results}
+  \frametitle{Difference with the quasi-steady model optimization}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Figures/LUT_vs_GK_Wg_vs_TG_windtype=1_alhpamax=12_nodalphalimit.eps}
+    \caption{Performance difference between quasi-steady and unsteady model for vertical gusts}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Difference with the quasi-steady model optimization}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Figures/LUT_vs_GK_Wg_vs_TG_windtype=3_alhpamax=12_nodalphalimit.eps}
+    \caption{Performance difference between quasi-steady and unsteady model for combined gusts}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{A closer look at good performing short gusts}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Figures/Cl_vs_alpha_wt=1_tg=0p5_alphamax=20.eps}
+    \caption{Lift coefficient versus angle of attack for 0.5T long vertical wind gusts with the unsteady model}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Tg=0.5}
+  \frametitle{A closer look at good performing short gusts}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Figures/alpha_vs_Tg_wt1.eps}
+    \caption{Angle of attack for short vertical gusts with the quasi-steady (QS) and unsteady (GK) model}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Difference around $T_g \le0.2$}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Figures/LUT_vs_GK_Wg_vs_TG_windtype=3_alhpamax=12_nodalphalimit.eps}
+    \caption{Performance difference between quasi-steady and unsteady model for combined gusts}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Tg=0.1}
-\end{frame}
+  \frametitle{Difference around $T_g \le0.2$}
 
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{./Figures/Cl_vs_alpha_Windtype=3_Tg=0p05_GK_alphamax=12.eps}
+    \caption{Lift coefficient versus angle of attack for a 0.05T long combined gust}
+  \end{figure}
+\end{frame}
 
 \subsection{Phase results}
 
 \begin{frame}
-  put Wa vs Tg curve and alpha tg to explain on the same slide?
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Figures/combined_gust_amplitude_vs_phase_GK.eps}
+    \caption{Influence of the phase between the components of the combined gust in the unsteady model case}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{./Figures/alpha_vs_Tg_GK_phi_Tg=1.eps}
+    \caption{Angle of attack profile for different phase angle when $T_g=1$}
+  \end{figure}
 \end{frame}
 
 \section{Conclusion}
+  GK model prediction:
+    \begin{itemize}
+      \item Accurate prediction of lift and \emph{drag} for arbitrary pitch motion
+      \item The drag coefficient shares the same state variable as the lift 
+      \item The model is fast enough to be used for optimization algorithms
+    \end{itemize}
+  Trajectory optimization
+    \begin{itemize}
+      \item Neutral energy flight is possible through combinations of vertical and horizontal gusts
+      \item Vehicle and airfoil time scale are related through the Froude number
+      \item Unsteady aerodynamic effects are seen for gusts shorter than $0.7T$
+      \item The unsteady effects are beneficial for $T_g \in [0.2,0.7]$ as they let the airfoil achieve higher $C_l$ values
+      \item The unsteady effects are detrimental for $T_g$ smaller than $0.2$, where the ``angle of attack lag'' becomes significant
+    \end{itemize}
 
 \end{document}
