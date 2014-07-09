@@ -49,6 +49,16 @@ through trajectory optimization }
 \section{Introduction}
 \begin{frame}
   \frametitle{Introduction and motivations}
+\par The goal is to find optimal energy extraction strategies in unsteady flows.
+\begin{itemize}
+  \item UAV energy saving
+  \item Vertical axis wind turbine
+  \item Helicopter rotor blade
+\end{itemize}
+
+\par How do vehicle dynamics relate to unsteady aerodynamic effects 
+
+\par When do these unsteady effects start to become significant
 
 \end{frame}
 
@@ -57,21 +67,21 @@ through trajectory optimization }
 \subsection{Dynamic soaring}
 
 \begin{frame}
-  \frametitle{Different types of soaring}
+  \frametitle{Different types of soaring\footnote{\tiny{Rayleigh, \emph{The soaring of birds}, Nature, 1883}}}
   \begin{columns}
     \column{.5\textwidth}
-    \begin{figure}[h]
+    \begin{figure}[ht]
       \centering
-      %\includegraphics{<+file+>}
-      \caption{something about soaring}
+	\includegraphics[width=1\textwidth]{Figures/flight-dynamic-soaring-diagram.jpg} 
+      \caption{Dynamic soaring maneuver}
     \end{figure}
     \column{.5\textwidth}
-    {\Large Spatial wind gradients}
+    \textbf{Spatial wind gradients}
     \begin{itemize}
       \item Thermal updrafts
       \item Horizontal wind gradients
     \end{itemize}
-    {\Large Temporal wind gradients}
+    \textbf{Temporal wind gradients}
     \begin{itemize}
       \item Natural turbulences
       \item Building and natural feature wake
@@ -94,7 +104,7 @@ through trajectory optimization }
 
     \column{.5\textwidth}
     \begin{block}{The neutral energy loop}
-      Finding the minimal wind gust that allows to maintain altitude and speed over a gust. 
+      Finding the minimal wind gust amplitude that allows to maintain altitude and speed over a gust. 
     \end{block}
   \end{columns}
 \end{frame}
@@ -194,7 +204,9 @@ through trajectory optimization }
   \begin{itemize}
     \item State vector
       \begin{equation*}
-	x= 
+	\begin{array}[c]{cc}
+	  T_i=\frac{i}{N}T_g &
+	  x= 
 	\begin{bmatrix}
 	  \cdots \\
 	  X_i \\
@@ -205,7 +217,8 @@ through trajectory optimization }
 	  \cdots \\
 	  W_a
 	\end{bmatrix}
-	\quad i \in [1,N]
+	\quad i \in [0,N]
+	\end{array}
       \end{equation*}
     \item Cost function: $W_a$
     \item Constraints: equations of motion, limits on the range of angles of attack allowed, neutral energy loop conditions.
@@ -237,7 +250,7 @@ through trajectory optimization }
       \end{equation*}
 
       \begin{equation*}
-	0=y_{k+1} - y_k - \frac{1}{6}( \dot{y_k} + 4 \dot{y_m} + \dot{y_{k+1}})\delta t \quad \forall i \in [1,N-1]
+	0=y_{k+1} - y_k - \frac{1}{6}( \dot{y_k} + 4 \dot{y_m} + \dot{y_{k+1}})\delta t \quad \forall i \in [0,N-1]
       \end{equation*}
   \end{itemize}
 
@@ -317,7 +330,7 @@ Lissaman found a gust amplitude $W_a=0.128$ for this case
 \subsection{Quasi-steady aerodynamic model results}
 
 \begin{frame}
-  \frametitle{Tg dependency}
+  \frametitle{Gust duration ($Tg$) dependency}
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}[h!]
@@ -416,7 +429,7 @@ Lissaman found a gust amplitude $W_a=0.128$ for this case
 
 \begin{frame}
   \frametitle{The GK model concept}
-  The Goman and Khrabrov model\footnote{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109–1115,1994.} - a non-linear state space model
+  The Goman and Khrabrov model\footnote{\tiny{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109 – 1115,1994. - a non-linear state space model}
   \begin{equation*}
     \begin{array}[c]{c}
       C_l= f(\alpha,x) \\
