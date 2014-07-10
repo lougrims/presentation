@@ -5,6 +5,9 @@
 \usepackage{pgfpages}
 \usepackage{graphicx}
 \usepackage{mathtools}          % used for equations
+%\usepackage{enumitem}
+\usepackage{ marvosym }
+
 
 
 \mode<presentation>{\usetheme{Darmstadt}}
@@ -14,6 +17,7 @@
 \useoutertheme[footline=empty,subsection=false]{miniframes}
 \useinnertheme{default}
 \setbeamertemplate{items}[default]
+
 \setbeamertemplate{section in toc}[sections numbered]
 \setbeamertemplate{subsection in toc}[sections default]
 \beamertemplatenavigationsymbolsempty
@@ -49,16 +53,18 @@ through trajectory optimization }
 \section{Introduction}
 \begin{frame}
   \frametitle{Introduction and motivations}
-\par The goal is to find optimal energy extraction strategies in unsteady flows.
-\begin{itemize}
-  \item UAV energy saving
-  \item Vertical axis wind turbine
-  \item Helicopter rotor blade
-\end{itemize}
+  \begin{itemize}
+    \item The goal is to find optimal energy extraction strategies in unsteady flows.
+  \begin{itemize}
+  \item[\MVRightarrow] UAV energy saving
+    \item[\MVRightarrow] Vertical axis wind turbine
+    \item[\MVRightarrow] Helicopter rotor blade
+  \end{itemize}
 
-\par How do vehicle dynamics relate to unsteady aerodynamic effects 
+\item How do vehicle dynamics relate to unsteady aerodynamic effects 
 
-\par When do these unsteady effects start to become significant
+\item When do these unsteady effects start to become significant
+  \end{itemize}
 
 \end{frame}
 
@@ -72,7 +78,7 @@ through trajectory optimization }
     \column{.5\textwidth}
     \begin{figure}[ht]
       \centering
-	\includegraphics[width=1\textwidth]{Figures/flight-dynamic-soaring-diagram.jpg} 
+      \includegraphics[width=1\textwidth]{Figures/flight-dynamic-soaring-diagram.jpg} 
       \caption{Dynamic soaring maneuver}
     \end{figure}
     \column{.5\textwidth}
@@ -207,17 +213,17 @@ through trajectory optimization }
 	\begin{array}[c]{cc}
 	  T_i=\frac{i}{N}T_g &
 	  x= 
-	\begin{bmatrix}
-	  \cdots \\
-	  X_i \\
-	  Z_i \\
-	  U_i \\
-	  W_i \\
-	  L_i / \alpha_i \\
-	  \cdots \\
-	  W_a
-	\end{bmatrix}
-	\quad i \in [0,N]
+	  \begin{bmatrix}
+	    \cdots \\
+	    X_i \\
+	    Z_i \\
+	    U_i \\
+	    W_i \\
+	    L_i / \alpha_i \\
+	    \cdots \\
+	    W_a
+	  \end{bmatrix}
+	  \quad i \in [0,N]
 	\end{array}
       \end{equation*}
     \item Cost function: $W_a$
@@ -276,8 +282,8 @@ through trajectory optimization }
       \item Limits in range of $C_l$
 	\begin{equation*}
 	  \begin{array}[c]{c}
-	  L_{\min} \le L_i \le L_{\max} \\
-	  \alpha_{\max} \le \alpha_i \le \alpha_{\max}
+	    L_{\min} \le L_i \le L_{\max} \\
+	    \alpha_{\max} \le \alpha_i \le \alpha_{\max}
 	  \end{array}
 	\end{equation*}
     \end{itemize}
@@ -288,7 +294,7 @@ through trajectory optimization }
 
 \begin{frame}
   \frametitle{Comparison with Lissaman's results - Quadratic model}
-Lissaman found a gust amplitude $W_a=0.128$ for this case 
+  Lissaman found a gust amplitude $W_a=0.128$ for this case 
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}[ht]
@@ -429,7 +435,7 @@ Lissaman found a gust amplitude $W_a=0.128$ for this case
 
 \begin{frame}
   \frametitle{The GK model concept}
-  The Goman and Khrabrov model\footnote{\tiny{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109 – 1115,1994. - a non-linear state space model}
+  The Goman and Khrabrov model\footnote{\tiny{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109 – 1115,1994. - a non-linear state space model}}
   \begin{equation*}
     \begin{array}[c]{c}
       C_l= f(\alpha,x) \\
@@ -485,10 +491,10 @@ Lissaman found a gust amplitude $W_a=0.128$ for this case
 \begin{frame}
   \frametitle{Quasi-steady map and state variable}
   \begin{equation*}
-      \begin{array}[c]{c}
-	C_l=2 \pi \alpha (0.6 x + 0.4) + C_{l0} \\
-	C_d= \frac{ \left( \left( 2 - x \right)C_l \right)^2 }{G_{\max}} + C_{d0}
-      \end{array}
+    \begin{array}[c]{c}
+      C_l=2 \pi \alpha (0.6 x + 0.4) + C_{l0} \\
+      C_d= \frac{ \left( \left( 2 - x \right)C_l \right)^2 }{G_{\max}} + C_{d0}
+    \end{array}
   \end{equation*}
   \begin{columns}
     \column{0.5\textwidth}
@@ -670,7 +676,6 @@ Lissaman found a gust amplitude $W_a=0.128$ for this case
 \end{frame}
 
 \begin{frame}
-
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{./Figures/alpha_vs_Tg_GK_phi_Tg=1.eps}
@@ -680,7 +685,7 @@ Lissaman found a gust amplitude $W_a=0.128$ for this case
 
 \section{Conclusion}
 \begin{frame}
-  \textbf{GK model prediction:}
+  \textbf{GK model predictions:}
   \begin{itemize}
     \item Accurate prediction of lift and \emph{drag} for arbitrary pitch motion
     \item The drag coefficient shares the same state variable as the lift 
