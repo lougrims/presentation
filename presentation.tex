@@ -120,7 +120,7 @@ through trajectory optimization }
   \begin{equation*}
     \begin{array}[c]{c}
       m \ddot{x} = -L' \cdot sin(\gamma) + D' \cdot cos(\gamma) \\
-      m \ddot{z} = L' \cdot cos(\gamma) - D' \cdot sin(\gamma) - m \cdot g
+      m \ddot{z} = -L' \cdot cos(\gamma) + D' \cdot sin(\gamma) + m \cdot g
     \end{array}
   \end{equation*}
   \begin{columns}
@@ -143,7 +143,7 @@ through trajectory optimization }
     \begin{array}[c]{c}
       \\
       \frac{dU}{dT}= -LQ \cdot sin(\gamma) + DQ \cdot cos(\gamma) \\
-      \frac{dW}{dT}= LQ \cdot cos(\gamma) - DQ \cdot sin(\gamma) - 1
+      \frac{dW}{dT}= -LQ \cdot cos(\gamma) + DQ \cdot sin(\gamma) + 1
     \end{array}
   \end{equation*}
 \end{frame}
@@ -256,7 +256,7 @@ through trajectory optimization }
       \end{equation*}
 
       \begin{equation*}
-	0=y_{k+1} - y_k - \frac{1}{6}( \dot{y_k} + 4 \dot{y_m} + \dot{y_{k+1}})\delta t \quad \forall i \in [0,N-1]
+	0=y_{i+1} - y_i - \frac{1}{6}( \dot{y_i} + 4 \dot{y_m} + \dot{y_{i+1}})\delta t \quad \forall i \in [0,N-1]
       \end{equation*}
   \end{itemize}
 
@@ -319,16 +319,16 @@ through trajectory optimization }
     \column{0.5\textwidth}
     \begin{figure}
       \begin{center}
-	\includegraphics[width=1\textwidth]{./Figures/Windtype=1_Tg=4_Wg=0p205_UAV_alphamax=12.eps}
+	\includegraphics[width=1\textwidth]{./Figures/Windtype=1_Tg=4_Wg=0p273_LUTNACA0009_alphamax=5_dalphadt=50.eps}
       \end{center}
-      \caption{$4T$ long vertical gust for the NACA0009 airfoil, $W_a=0.205$}
+      \caption{$4T$ long vertical gust for the NACA0009 airfoil, $W_a=0.273$}
     \end{figure}
     \column{0.5\textwidth}
     \begin{figure}[h]
       \begin{center}
-	\includegraphics[width=1\textwidth]{./Figures/Windtype=3_Tg=4_Wg=0p387_UAV_alphamax=12.eps}
+	\includegraphics[width=1\textwidth]{./Figures/Windtype=3_Tg=4_Wg=0p516_LUTNACA0009_alphamax=12_dalphadt=50.eps}
       \end{center}
-      \caption{$4T$ long combined gust for the NACA0009 airfoil, $W_a=0.387$}
+      \caption{$4T$ long combined gust for the NACA0009 airfoil, $W_a=0.516$}
     \end{figure}
   \end{columns} % NACA009 curves
 \end{frame}
@@ -435,7 +435,7 @@ through trajectory optimization }
 
 \begin{frame}
   \frametitle{The GK model concept}
-  The Goman and Khrabrov model\footnote{\tiny{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109 – 1115,1994. - a non-linear state space model}}
+  The Goman and Khrabrov model\footnote{\tiny{Goman M and Khrabrov A. \emph{Journal of Aircraft}, 31(5):1109 – 1115,1994.} - a non-linear state space model}
   \begin{equation*}
     \begin{array}[c]{c}
       C_l= f(\alpha,x) \\
@@ -660,7 +660,7 @@ through trajectory optimization }
 
   \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{./Figures/Cl_vs_alpha_Windtype=3_Tg=0p05_GK_alphamax=12.eps}
+    \includegraphics[width=0.8\textwidth]{./Figures/Cl_vs_alpha_Windtype=3_Tg=0p05_GK_alphamax=12.eps}
     \caption{Lift coefficient versus angle of attack for a 0.05T long combined gust}
   \end{figure}
 \end{frame}
