@@ -134,7 +134,7 @@ through trajectory optimization }
     Lissaman's non-dimensional variables
     \begin{itemize}
       \item Velocities with $V^{*}$ the optimal glide speed
-      \item Time with $T=\frac{V^{*}}{g}$
+      \item Time with $T_c=\frac{V^{*}}{g}$
       \item Lift and drag coefficients $L= \frac{C_l}{C_l^*}$ $D= \frac{C_d}{C_l^*}$
       \item Dynamic pressure $Q = \frac{L'}{MgL} = \frac{ \rho S V^{2} C_l^* }{2Mg}$ $Q=(U-U_g)^2+ (W-W_g)^2$
     \end{itemize}
@@ -203,6 +203,7 @@ through trajectory optimization }
 	\end{array}
       \end{equation*}
   \end{itemize}
+  With $T=\frac{t}{T_c}$.
 \end{frame}
 
 \begin{frame}
@@ -301,13 +302,13 @@ through trajectory optimization }
       \begin{center}	
 	\includegraphics[width=1\textwidth]{./Figures/Windtype=1_Tg=4_Wg=0p129_quad_G=20.eps}
       \end{center}
-      \caption{Optimization results for a $4T$ long vertical gust $W_a=0.129$}
+      \caption{Optimization results for a $4T_c$ long vertical gust $W_a=0.129$}
     \end{figure}
     \column{0.5\textwidth}
     \begin{figure}[h]
       \centering
       \includegraphics[width=1\textwidth]{./Figures/LIssaman_N_comparison.eps}
-      \caption{Comparison with Lissaman's non-dimensional normal force $N$ for a $4T$ long vertical gust}
+      \caption{Comparison with Lissaman's non-dimensional normal force $N$ for a $4T_c$ long vertical gust}
     \end{figure}
   \end{columns}
   %put the lissaman quadratic thing here
@@ -321,14 +322,14 @@ through trajectory optimization }
       \begin{center}
 	\includegraphics[width=1\textwidth]{./Figures/Windtype=1_Tg=4_Wg=0p273_LUTNACA0009_alphamax=5_dalphadt=50.eps}
       \end{center}
-      \caption{$4T$ long vertical gust for the NACA0009 airfoil, $W_a=0.273$}
+      \caption{$4T_c$ long vertical gust for the NACA0009 airfoil, $W_a=0.273$}
     \end{figure}
     \column{0.5\textwidth}
     \begin{figure}[h]
       \begin{center}
 	\includegraphics[width=1\textwidth]{./Figures/Windtype=3_Tg=4_Wg=0p516_LUTNACA0009_alphamax=12_dalphadt=50.eps}
       \end{center}
-      \caption{$4T$ long combined gust for the NACA0009 airfoil, $W_a=0.516$}
+      \caption{$4T_c$ long combined gust for the NACA0009 airfoil, $W_a=0.516$}
     \end{figure}
   \end{columns} % NACA009 curves
 \end{frame}
@@ -580,7 +581,7 @@ through trajectory optimization }
     \column{0.4\textwidth}
     Gliding vehicle time scale
     \begin{equation*}
-      T=\frac{g}{V^*}
+      T_c=\frac{V^*}{g}
     \end{equation*}
 
     Airfoil time scale
@@ -590,7 +591,7 @@ through trajectory optimization }
 
     For a vehicle flying at $V^*$
     \begin{equation*}
-      Fr=\frac{T}{t+}=\frac{{V^*}^2}{g \cdot c}
+      Fr=\frac{T_c}{t+}=\frac{{V^*}^2}{g \cdot c}
       \label{eqn:T_t+_ratio}
     \end{equation*}
 
@@ -599,7 +600,7 @@ through trajectory optimization }
       \begin{center}
 	\includegraphics[width=0.8\textwidth]{./Figures/froude.png}
       \end{center}
-      \caption{T to t+ ratio for various flying objects}
+      \caption{$T_c$ to $t+$ ratio for various flying objects}
     \end{figure}
   \end{columns}
 \end{frame}
@@ -632,7 +633,7 @@ through trajectory optimization }
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{./Figures/Cl_vs_alpha_wt=1_tg=0p5_alphamax=20.eps}
-    \caption{Lift coefficient versus angle of attack for 0.5T long vertical wind gusts with the unsteady model}
+    \caption{Lift coefficient versus angle of attack for $0.5T_c$ long vertical wind gusts with the unsteady model}
   \end{figure}
 \end{frame}
 
@@ -661,7 +662,7 @@ through trajectory optimization }
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{./Figures/Cl_vs_alpha_Windtype=3_Tg=0p05_GK_alphamax=12.eps}
-    \caption{Lift coefficient versus angle of attack for a 0.05T long combined gust}
+    \caption{Lift coefficient versus angle of attack for a $0.05T_c$ long combined gust}
   \end{figure}
 \end{frame}
 
